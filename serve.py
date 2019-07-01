@@ -22,19 +22,42 @@ def process_input_data(input_data, tokenizer):
 def process_output_data(predictions, padded_token_seq, tokenizer):
     """Process output data."""
     # Regenerate text
-    text = [tokenizer.index_word[idx] for idx in padded_token_seq[0] if idx != 0]
+    text_list = [tokenizer.index_word[idx] for idx in padded_token_seq[0] if idx != 0]
+    text = " ".join(text_list)
 
     # Normalize alphas for highlighting text
     mask = padded_token_seq[0] != 0
     alphas = (predictions["alphas"][0] / predictions["alphas"][0].max())[mask]
 
+    # HTML attention map
+    attn_text = visualize_attention(
+        class_id=int(predictions["class_ids"][0]), text_list=text_list, alphas=alphas
+    )
+
     output_data = {
-        "class": predictions["class_ids"][0],
-        "probability": predictions["probabilities"][0],
+        "class_id": int(predictions["class_ids"][0]),
+        "probability": float(predictions["probabilities"][0]),
         "text": text,
-        "alphas": alphas,
+        "attn_text": attn_text,
     }
     return output_data
+
+
+def visualize_attention(class_id, text_list, alphas):
+    """Create html string with highlighted words"""
+    # Choose color based on predicted class
+    if class_id == 1:
+        r, g, b = 0, 255, 0
+    else:
+        r, g, b = 255, 0, 0
+
+    html_list = []
+    for word, alpha in zip(text_list, alphas):
+        html_list.append(
+            f"<font style='background: rgba({r}, {g}, {b}, {alpha})'>{word}</font>"
+        )
+
+    return " ".join(html_list)
 
 
 def get_model_api():

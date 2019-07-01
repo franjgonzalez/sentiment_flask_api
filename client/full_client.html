@@ -1,3 +1,5 @@
+
+
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
@@ -10,8 +12,8 @@
         <div style="padding-bottom: 0.5cm">
             <div class="card text-center bg-light">
                 <div class="card-body" style="padding-bottom: 0.2cm">
-                    <input class="card-title form-control" type="text" id="input" name="input" placeholder="Input sentence"/>
-                    <button class="card-text btn btn-outline-primary" id="btn">Find Entities</button>
+                    <input class="card-title form-control" type="text" id="input" name="input" placeholder="I love deep learning!"/>
+                    <button class="card-text btn btn-outline-primary" id="btn">Find Sentiment</button>
                     <div class="spinner" id="spinner" style="display: none">
                       <div class="double-bounce1"></div>
                       <div class="double-bounce2"></div>
@@ -19,8 +21,8 @@
                 </div>
                 <div class="card-footer bg-white">
                     <pre class="card-text api-pre" style="padding-bottom: 0.2cm">
-                        <div class="item" id="api_input">I love Paris </div>
-                        <div class="item" id="api_output">0 0   B-LOC</div>
+                        <div class="item" id="api_output"></div>
+                        <div class="item" id="api_prob"></div>
                     </pre>
                 </div>
             </div>
@@ -45,8 +47,8 @@
                 $('#btn').toggle();
                 $('#spinner').toggle();
                 // fill the html for answer
-                $('#api_input').html( data.input );
-                $('#api_output').html( data.output );
+                $('#api_output').html( data.attn_text );
+                $('#api_prob').html( data.probability );
                 $("#input").val("");
             },
             error: function( jqXhr, textStatus, errorThrown ){
