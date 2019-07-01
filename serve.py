@@ -1,6 +1,7 @@
 import pickle
 
 import tensorflow as tf
+from tensorflow.contrib import predictor
 
 from model.attention_text_classification.src import main
 from model.attention_text_classification.src.utils import utils
