@@ -1,0 +1,3 @@
+[submodule "model/attention_text_classification"]
+	path = model/attention_text_classification
+	url = https://github.com/franjgonzalez/attention_text_classification.git

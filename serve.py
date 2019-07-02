@@ -2,9 +2,9 @@ import pickle
 
 import tensorflow as tf
 
-from model.src import main
-from model.src.utils import utils
-from model.src.utils import data_utils
+from model.attention_text_classification.src import main
+from model.attention_text_classification.src.utils import utils
+from model.attention_text_classification.src.utils import data_utils
 
 
 def process_input_data(input_data, tokenizer):
@@ -18,21 +18,18 @@ def process_input_data(input_data, tokenizer):
     return padded_token_seq
 
 
-def process_output_data(pred_gen, padded_token_seq, tokenizer):
+def process_output_data(predictions, padded_token_seq, tokenizer):
     """Process output data."""
-    # Yield prediction dictionary from generator
-    pred_dict = next(pred_gen)
-
     # Regenerate text
     text = [tokenizer.index_word[idx] for idx in padded_token_seq[0] if idx != 0]
 
     # Normalize alphas for highlighting text
     mask = padded_token_seq[0] != 0
-    alphas = (pred_dict["alphas"] / pred_dict["alphas"].max())[mask]
+    alphas = (predictions["alphas"][0] / predictions["alphas"][0].max())[mask]
 
     output_data = {
-        "class": pred_dict["class_ids"][0],
-        "probability": pred_dict["probabilities"][0],
+        "class": predictions["class_ids"][0],
+        "probability": predictions["probabilities"][0],
         "text": text,
         "alphas": alphas,
     }
@@ -46,16 +43,12 @@ def get_model_api():
         type: Description of returned object.
 
     """
-    # Load hyperparameters and tokenizer
+    # Load tokenizer
     with open("data/tokenizer.pkl", "rb") as f:
         tokenizer = pickle.load(f)
-    params = utils.load_config("src/config.yml")
-    params.tokenizer = tokenizer
 
-    # 1. Initialize model.
-    estimator = tf.estimator.Estimator(
-        model_fn=main.model_fn, params=params, model_dir="data/ckpt/"
-    )
+    # Initilize predictor from saved model
+    predict_fn = predictor.from_saved_model("model/saved_model")
 
     def model_api(input_data):
         """Model API.
@@ -71,14 +64,10 @@ def get_model_api():
         padded_token_seq = process_input_data(input_data, tokenizer)
 
         # 3. Call model predict function
-        pred_gen = estimator.predict(
-            input_fn=lambda: data_utils.input_fn(
-                features=padded_token_seq, labels=None, batch_size=1, buffer_size=1
-            )
-        )
+        predictions = predict_fn({"feature": padded_token_seq})
 
         # 4. Process the output
-        output_data = process_output_data(pred_gen, padded_token_seq, tokenizer)
+        output_data = process_output_data(predictions, padded_token_seq, tokenizer)
 
         # Return data
         return output_data
