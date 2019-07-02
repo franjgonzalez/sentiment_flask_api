@@ -1,0 +1,12 @@
+Flask==1.0.2
+Flask-Cors==3.0.8
+gunicorn==19.9.0
+matplotlib==3.0.3
+munch==2.3.2
+nltk==3.4
+numpy==1.16.2
+pandas==0.24.2
+scikit-learn==0.20.3
+scipy==1.1.0
+tensorflow==1.13.1
+tqdm==4.31.1
