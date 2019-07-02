@@ -14,8 +14,15 @@ python app.py
 and open full_client.html on your browser. You should see something like this.
 
 <p align="center">
-<img width="100%" src="fig/client.png" />
+<img width="100%" src="fig/pos_sentiment.png" />
 <br>
+Figure 1. Example of positive sentiment sentence.
+</p>
+
+<p align="center">
+<img width="100%" src="fig/neg_sentiment.png" />
+<br>
+Figure 2. Example of negative sentiment sentence.
 </p>
 
 

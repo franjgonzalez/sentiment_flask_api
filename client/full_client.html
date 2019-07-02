@@ -1,13 +1,12 @@
 
-
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <link rel="stylesheet" href="custom.css">
 </head>
 
-
 <body>
+    <p style="margin-bottom:3cm;"></p>
     <div class="container col-lg-6">
         <div style="padding-bottom: 0.5cm">
             <div class="card text-center bg-light">
@@ -48,14 +47,14 @@
                 $('#spinner').toggle();
                 // fill the html for answer
                 $('#api_output').html( data.text );
-                $('#api_prob').html( data.probability );
+                $('#api_prob').html( );
                 $("#input").val("");
             },
             error: function( jqXhr, textStatus, errorThrown ){
                 $('#btn').toggle();
                 $('#spinner').toggle();
-                $('#api_input').html( "Sorry, the server is asleep..." );
-                $('#api_output').html( "Try again in a moment!" );
+                $('#api_output').html( "Sorry, the server is asleep..." );
+                $('#api_prob').html( "Try again in a moment!" );
                 console.log( errorThrown );
             },
             timeout: 3000 // sets timeout to 10 seconds
