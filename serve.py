@@ -21,6 +21,9 @@ def process_input_data(input_data, tokenizer):
 
 def process_output_data(predictions, padded_token_seq, tokenizer):
     """Process output data."""
+    class_id = int(predictions["class_ids"][0])
+    probability = float(predictions["probabilities"][0])
+
     # Regenerate text
     text_list = [tokenizer.index_word[idx] for idx in padded_token_seq[0] if idx != 0]
     text = " ".join(text_list)
@@ -35,8 +38,8 @@ def process_output_data(predictions, padded_token_seq, tokenizer):
     )
 
     output_data = {
-        "class_id": int(predictions["class_ids"][0]),
-        "probability": float(predictions["probabilities"][0]),
+        "class_id": class_id,
+        "probability": probability,
         "text": text,
         "attn_text": attn_text,
     }

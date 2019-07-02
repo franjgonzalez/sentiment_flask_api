@@ -22,7 +22,7 @@
                 <div class="card-footer bg-white">
                     <pre class="card-text api-pre" style="padding-bottom: 0.2cm">
                         <div class="item" id="api_output"></div>
-                        <div class="item" id="api_prob"></div>
+                        <!-- <div class="item" id="api_prob"></div> -->
                     </pre>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                 $('#spinner').toggle();
                 // fill the html for answer
                 $('#api_output').html( data.attn_text );
-                $('#api_prob').html( data.probability );
+                // $('#api_prob').html( data.probability + "%");
                 $("#input").val("");
             },
             error: function( jqXhr, textStatus, errorThrown ){
