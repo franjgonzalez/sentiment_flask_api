@@ -26,39 +26,40 @@ def process_output_data(predictions, padded_token_seq, tokenizer):
 
     # Regenerate text
     text_list = [tokenizer.index_word[idx] for idx in padded_token_seq[0] if idx != 0]
-    text = " ".join(text_list)
 
     # Normalize alphas for highlighting text
     mask = padded_token_seq[0] != 0
     alphas = (predictions["alphas"][0] / predictions["alphas"][0].max())[mask]
 
     # HTML attention map
-    attn_text = visualize_attention(
-        class_id=int(predictions["class_ids"][0]), text_list=text_list, alphas=alphas
-    )
+    text = visualize(probability=probability, text_list=text_list, alphas=None)
 
-    output_data = {
-        "class_id": class_id,
-        "probability": probability,
-        "text": text,
-        "attn_text": attn_text,
-    }
+    output_data = {"class_id": class_id, "probability": probability, "text": text}
     return output_data
 
 
-def visualize_attention(class_id, text_list, alphas):
+def visualize(probability, text_list, alphas=None):
     """Create html string with highlighted words"""
-    # Choose color based on predicted class
-    if class_id == 1:
+
+    # Choose color based on probability
+    if probability > 0.5:
         r, g, b = 0, 255, 0
     else:
         r, g, b = 255, 0, 0
 
+    # Construct html string
     html_list = []
-    for word, alpha in zip(text_list, alphas):
-        html_list.append(
-            f"<font style='background: rgba({r}, {g}, {b}, {alpha})'>{word}</font>"
-        )
+
+    if alphas:  # Visualize attention
+        for word, alpha in zip(text_list, alphas):
+            html_list.append(
+                f"<font style='background: rgba({r}, {g}, {b}, {alpha})'>{word}</font>"
+            )
+    else:  # Visualize sentiment
+        for word in text_list:
+            html_list.append(
+                f"<font style='background: rgba({r}, {g}, {b}, {0.3})'>{word}</font>"
+            )
 
     return " ".join(html_list)
 
